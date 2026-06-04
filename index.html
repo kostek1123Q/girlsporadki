@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Girls Poradki</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin:0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe4f0, #ffd1e8);
+    color:#333;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    padding:25px;
+    border-radius:18px;
+    width:340px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align:center;
+  }
+
+  h1 {
+    margin:0 0 10px;
+    font-size:22px;
+    color:#d63384;
+  }
+
+  p {
+    font-size:13px;
+    opacity:0.8;
+  }
+
+  input, button {
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border-radius:10px;
+    border:1px solid #eee;
+    font-family: inherit;
+  }
+
+  input {
+    background:#fff;
+  }
+
+  button {
+    background:#ff4fa3;
+    color:white;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s;
+  }
+
+  button:hover {
+    background:#e63e92;
+  }
+
+  .status {
+    margin-top:10px;
+    font-size:12px;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Girls Poradki 💗</h1>
+  <p>Wrzuć zdjęcie</p>
+
+  <input type="file" id="file" accept="image/*">
+  <input type="text" id="webhook" placeholder="Wklej webhook Discord">
+
+  <button onclick="send()">Wyślij</button>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+async function send() {
+  const file = document.getElementById("file").files[0];
+  const webhook = document.getElementById("webhook").value.trim();
+  const status = document.getElementById("status");
+
+  if (!file) {
+    status.innerText = "Wybierz zdjęcie";
+    return;
+  }
+
+  if (!webhook) {
+    status.innerText = "https://discord.com/api/webhooks/1399858467988312254/_a-ikBavzQiidlKRFNTiWFqsVFsR3P5dfDh8md94MiszasOvj5qXzGdVqrYj78e4Xnlf";
+    return;
+  }
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("payload_json", JSON.stringify({
+    content: "💗 Nowe zdjęcie z Girls Poradki"
+  }));
+
+  try {
+    status.innerText = "Wysyłanie...";
+
+    const res = await fetch(webhook, {
+      method: "POST",
+      body: form
+    });
+
+    status.innerText = res.ok ? "Wysłano ✔" : "Błąd wysyłania ❌";
+  } catch (e) {
+    status.innerText = "Błąd połączenia ❌";
+  }
+}
+</script>
+
+</body>
+</html>
